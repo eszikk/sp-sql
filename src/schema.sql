@@ -1,8 +1,8 @@
 -- ORGANIZATION
-create sequence ORGANIZATION_ID_SEQ
+create sequence PROJECT_ID_SEQ
 /
 
-create table ORGANIZATION
+create table PROJECT
 (
     ID          NUMBER(38)                                               not null primary key,
     NAME        VARCHAR2(255)                                            not null,
@@ -13,13 +13,13 @@ create table ORGANIZATION
 )
 /
 
-create or replace trigger ORGANIZATION_ID_TRG
+create or replace trigger PROJECT_ID_TRG
     before insert
-    on ORGANIZATION
+    on PROJECT
     for each row
 begin
     if :new.id is null then
-        select ORGANIZATION_ID_SEQ.nextval into :new.id from dual;
+        select PROJECT_ID_SEQ.nextval into :new.id from dual;
     end if;
 end;
 /
@@ -30,16 +30,16 @@ create sequence PAGE_ID_SEQ
 
 create table PAGE
 (
-    ID              NUMBER(38)                                               not null primary key,
-    NAME            VARCHAR2(255)                                            not null,
-    DESCRIPTION     CLOB,
-    ACCESS_TYPE     VARCHAR2(10)                default 'closed'             not null CHECK (ACCESS_TYPE IN ('open', 'closed') ),
-    AUDIENCE        VARCHAR2(10)                default 'internal'           not null CHECK (AUDIENCE IN ('internal', 'external') ),
-    PUBLISHED       NUMBER(1)                   default 0                    not null CHECK (PUBLISHED in (1, 0)),
-    CREATED_AT      TIMESTAMP(6) WITH TIME ZONE default CURRENT_TIMESTAMP(6) not null,
-    UPDATED_AT      TIMESTAMP(6) WITH TIME ZONE,
-    DELETED_AT      TIMESTAMP(6) WITH TIME ZONE,
-    ORGANIZATION_ID NUMBER(38)                                               not null references ORGANIZATION
+    ID          NUMBER(38)                                               not null primary key,
+    NAME        VARCHAR2(255)                                            not null,
+    DESCRIPTION CLOB,
+    ACCESS_TYPE VARCHAR2(10)                default 'closed'             not null CHECK (ACCESS_TYPE IN ('open', 'closed') ),
+    AUDIENCE    VARCHAR2(10)                default 'internal'           not null CHECK (AUDIENCE IN ('internal', 'external') ),
+    PUBLISHED   NUMBER(1)                   default 0                    not null CHECK (PUBLISHED in (1, 0)),
+    CREATED_AT  TIMESTAMP(6) WITH TIME ZONE default CURRENT_TIMESTAMP(6) not null,
+    UPDATED_AT  TIMESTAMP(6) WITH TIME ZONE,
+    DELETED_AT  TIMESTAMP(6) WITH TIME ZONE,
+    PROJECT_ID  NUMBER(38)                                               not null references PROJECT
 )
 /
 
@@ -307,6 +307,15 @@ create table APP_USER_ENTITLEMENT
     USER_ID        NUMBER(38) references APP_USER    not null,
     ENTITLEMENT_ID NUMBER(38) references ENTITLEMENT not null,
     CONSTRAINT APP_USER_ENTITLEMENT_UK unique (USER_ID, ENTITLEMENT_ID)
+)
+/
+
+-- APP_USER_PAGE
+create table APP_USER_PAGE
+(
+    USER_ID NUMBER(38) references APP_USER not null,
+    PAGE_ID NUMBER(38) references PAGE     not null,
+    CONSTRAINT APP_USER_PAGE_UK unique (USER_ID, PAGE_ID)
 )
 /
 
