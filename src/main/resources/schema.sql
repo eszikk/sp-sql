@@ -64,7 +64,7 @@ create table COMPONENT_GROUP
     NAME       VARCHAR2(255)          not null,
     CREATED_AT TIMESTAMP(6),
     UPDATED_AT TIMESTAMP(6),
-    DELETED_AT  TIMESTAMP(6) WITH TIME ZONE,
+    DELETED_AT TIMESTAMP(6) WITH TIME ZONE,
     "order"    NUMBER(10) default '0' not null,
     COLLAPSED  NUMBER(1)  default 1   not null CHECK (COLLAPSED in (1, 0))
 )
@@ -319,5 +319,33 @@ create table APP_USER_PAGE
     CONSTRAINT APP_USER_PAGE_UK unique (USER_ID, PAGE_ID)
 )
 /
+
+-- AUDIT_TABLE
+create sequence EVENT_LOG_ID_SEQ
+/
+
+create table EVENT_LOG
+(
+    ID         NUMBER(38)                                               not null primary key,
+    OPERATION  VARCHAR2(10)                                             not null CHECK (OPERATION IN ('create', 'update', 'delete') ),
+    TABLE_NAME VARCHAR2(15)                                             not null CHECK (TABLE_NAME IN ('app_user', 'subscriber', 'component_tag') ),
+    FROM_DATA  CLOB CHECK ( FROM_DATA IS JSON),
+    TO_DATA    CLOB CHECK ( TO_DATA IS JSON),
+    USER_ID    NUMBER(38) references APP_USER                           not null,
+    CREATED_AT TIMESTAMP(6) WITH TIME ZONE default CURRENT_TIMESTAMP(6) not null
+)
+/
+
+create or replace trigger EVENT_LOG_ID_TRG
+    before insert
+    on EVENT_LOG
+    for each row
+begin
+    if :new.id is null then
+        select EVENT_LOG_ID_SEQ.nextval into :new.id from dual;
+    end if;
+end;
+/
+
 
 
