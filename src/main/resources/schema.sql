@@ -6,7 +6,7 @@ create table PROJECT
 (
     ID          NUMBER(38)                                               not null primary key,
     NAME        VARCHAR2(255)                                            not null,
-    DESCRIPTION CLOB,
+    DESCRIPTION VARCHAR2(255),
     CREATED_AT  TIMESTAMP(6) WITH TIME ZONE default CURRENT_TIMESTAMP(6) not null,
     UPDATED_AT  TIMESTAMP(6) WITH TIME ZONE,
     DELETED_AT  TIMESTAMP(6) WITH TIME ZONE
@@ -32,7 +32,7 @@ create table PAGE
 (
     ID          NUMBER(38)                                               not null primary key,
     NAME        VARCHAR2(255)                                            not null,
-    DESCRIPTION CLOB,
+    DESCRIPTION VARCHAR2(255),
     ACCESS_TYPE VARCHAR2(10)                default 'closed'             not null CHECK (ACCESS_TYPE IN ('open', 'closed') ),
     AUDIENCE    VARCHAR2(10)                default 'internal'           not null CHECK (AUDIENCE IN ('internal', 'external') ),
     PUBLISHED   NUMBER(1)                   default 0                    not null CHECK (PUBLISHED in (1, 0)),
@@ -64,6 +64,7 @@ create table COMPONENT_GROUP
     NAME       VARCHAR2(255)          not null,
     CREATED_AT TIMESTAMP(6),
     UPDATED_AT TIMESTAMP(6),
+    DELETED_AT  TIMESTAMP(6) WITH TIME ZONE,
     "order"    NUMBER(10) default '0' not null,
     COLLAPSED  NUMBER(1)  default 1   not null CHECK (COLLAPSED in (1, 0))
 )
@@ -88,7 +89,7 @@ create table COMPONENT
 (
     ID                 NUMBER(38)                                               not null primary key,
     NAME               VARCHAR2(255)                                            not null,
-    DESCRIPTION        CLOB,
+    DESCRIPTION        VARCHAR2(255),
     STATUS             NUMBER(10)                                               not null,
     "order"            NUMBER(10),
     CREATED_AT         TIMESTAMP(6) WITH TIME ZONE default CURRENT_TIMESTAMP(6) not null,
