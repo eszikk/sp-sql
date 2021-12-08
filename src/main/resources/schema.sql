@@ -87,17 +87,16 @@ create sequence COMPONENT_ID_SEQ
 
 create table COMPONENT
 (
-    ID                 NUMBER(38)                                               not null primary key,
-    NAME               VARCHAR2(255)                                            not null,
-    DESCRIPTION        VARCHAR2(255),
-    STATUS             NUMBER(10)                                               not null,
-    "order"            NUMBER(10),
-    CREATED_AT         TIMESTAMP(6) WITH TIME ZONE default CURRENT_TIMESTAMP(6) not null,
-    UPDATED_AT         TIMESTAMP(6) WITH TIME ZONE,
-    DELETED_AT         TIMESTAMP(6) WITH TIME ZONE,
-    ENABLED            NUMBER(1)                   default 0                    not null CHECK (ENABLED in (1, 0)),
-    PAGE_ID            NUMBER(38)                                               not null references PAGE,
-    COMPONENT_GROUP_ID NUMBER(38) references COMPONENT_GROUP
+    ID          NUMBER(38)                                               not null primary key,
+    NAME        VARCHAR2(255)                                            not null,
+    DESCRIPTION VARCHAR2(255),
+    STATUS      NUMBER(10)                                               not null,
+    "order"     NUMBER(10),
+    CREATED_AT  TIMESTAMP(6) WITH TIME ZONE default CURRENT_TIMESTAMP(6) not null,
+    UPDATED_AT  TIMESTAMP(6) WITH TIME ZONE,
+    DELETED_AT  TIMESTAMP(6) WITH TIME ZONE,
+    ENABLED     NUMBER(1)                   default 0                    not null CHECK (ENABLED in (1, 0)),
+    PAGE_ID     NUMBER(38)                                               not null references PAGE
 )
 /
 
@@ -110,6 +109,15 @@ begin
         select COMPONENT_ID_SEQ.nextval into :new.id from dual;
     end if;
 end;
+/
+
+--COMPONENT_COMPONENT_GROUP
+create table COMPONENT_COMPONENT_GROUP
+(
+    COMPONENT_ID       NUMBER(38) references COMPONENT not null,
+    COMPONENT_GROUP_ID NUMBER(38) references COMPONENT_GROUP,
+    CONSTRAINT COMPONENT_COMPONENT_GROUP_UK unique (COMPONENT_ID, COMPONENT_GROUP_ID)
+)
 /
 
 --INCIDENT
@@ -219,6 +227,42 @@ create table COMPONENT_TAG
     COMPONENT_ID NUMBER(38) references COMPONENT not null,
     TAG_ID       NUMBER(38) references TAG       not null,
     CONSTRAINT COMPONENT_TAG_UK unique (COMPONENT_ID, TAG_ID)
+)
+/
+
+-- INCIDENT_TAG
+create table INCIDENT_TAG
+(
+    INCIDENT_ID NUMBER(38) references INCIDENT not null,
+    TAG_ID      NUMBER(38) references TAG      not null,
+    CONSTRAINT INCIDENT_TAG_UK unique (INCIDENT_ID, TAG_ID)
+)
+/
+
+-- SCHEDULED_MAINTENANCE_TAG
+create table SCHEDULED_MAINTENANCE_TAG
+(
+    SCHEDULED_MAINTENANCE_ID NUMBER(38) references SCHEDULED_MAINTENANCE not null,
+    TAG_ID                   NUMBER(38) references TAG                   not null,
+    CONSTRAINT SCHEDULED_MAINTENANCE_TAG_UK unique (SCHEDULED_MAINTENANCE_ID, TAG_ID)
+)
+/
+
+-- PAGE_TAG
+create table PAGE_TAG
+(
+    PAGE_ID NUMBER(38) references PAGE not null,
+    TAG_ID  NUMBER(38) references TAG  not null,
+    CONSTRAINT PAGE_TAG_UK unique (PAGE_ID, TAG_ID)
+)
+/
+
+-- PROJECT_TAG
+create table PROJECT_TAG
+(
+    PROJECT_ID NUMBER(38) references PROJECT not null,
+    TAG_ID  NUMBER(38) references TAG  not null,
+    CONSTRAINT PROJECT_TAG_UK unique (PROJECT_ID, TAG_ID)
 )
 /
 
