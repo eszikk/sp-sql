@@ -2,6 +2,7 @@ package com.example.oraclestatuspagev2.web;
 
 import com.example.oraclestatuspagev2.web.dto.ErrorDto;
 import com.example.oraclestatuspagev2.web.exception.NotFoundException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -22,6 +23,19 @@ public class ErrorHandler {
                 .error(ex.getMessage())
                 .timestamp(OffsetDateTime.now().toString())
                 .path(request.getRequestURI())
+                .method(request.getMethod())
+                .build();
+    }
+
+    @ExceptionHandler(EmptyResultDataAccessException.class)
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    public ErrorDto emptyResultDataAccessException(HttpServletRequest request, EmptyResultDataAccessException ex) {
+        return ErrorDto.builder()
+                .status(HttpStatus.NOT_FOUND.value())
+                .error(ex.getMessage())
+                .timestamp(OffsetDateTime.now().toString())
+                .path(request.getRequestURI())
+                .method(request.getMethod())
                 .build();
     }
 
@@ -33,6 +47,7 @@ public class ErrorHandler {
                 .error(ex.getMessage())
                 .timestamp(OffsetDateTime.now().toString())
                 .path(request.getRequestURI())
+                .method(request.getMethod())
                 .build();
     }
 }

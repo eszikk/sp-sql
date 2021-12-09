@@ -54,7 +54,7 @@ public class ProjectService implements CrudService<ProjectFullDto, ProjectReduce
 
     @Override
     public void delete(Long id) {
-
+        projectRepository.deleteById(id);
     }
 
 

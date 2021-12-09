@@ -10,4 +10,5 @@ public class ErrorDto {
     Integer status;
     String error;
     String path;
+    String method;
 }

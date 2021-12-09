@@ -41,4 +41,9 @@ public class ProjectController {
     public ProjectReducedDto create(@RequestBody ProjectCreateDto projectCreateDto) {
         return projectService.create(projectCreateDto);
     }
+
+    @DeleteMapping(value = "/projects/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public void delete(@PathVariable @NotBlank Long id) {
+         projectService.delete(id);
+    }
 }
