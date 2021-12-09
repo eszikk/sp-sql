@@ -1,29 +1,32 @@
 package com.example.oraclestatuspagev2.persistent.service;
 
-import com.example.oraclestatuspagev2.web.dto.UserDto;
+import com.example.oraclestatuspagev2.web.dto.user.UserCreateDto;
+import com.example.oraclestatuspagev2.web.dto.user.UserFullDto;
+import com.example.oraclestatuspagev2.web.dto.user.UserReducedDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class UserService implements CrudService<UserDto>{
+public class UserService implements CrudService<UserFullDto, UserReducedDto, UserCreateDto>{
+
     @Override
-    public List<UserDto> getAll() {
+    public List<UserReducedDto> getAll() {
         return null;
     }
 
     @Override
-    public UserDto get(Long id) {
+    public UserFullDto get(Long id) {
         return null;
     }
 
     @Override
-    public UserDto create(UserDto userDto) {
+    public UserReducedDto create(UserCreateDto userCreateDto) {
         return null;
     }
 
     @Override
-    public void update(Long id, UserDto userDto) {
+    public void update(Long id, UserCreateDto userCreateDto) {
 
     }
 

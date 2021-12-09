@@ -1,29 +1,32 @@
 package com.example.oraclestatuspagev2.persistent.service;
 
-import com.example.oraclestatuspagev2.web.dto.TagDto;
+import com.example.oraclestatuspagev2.web.dto.tag.TagCreateDto;
+import com.example.oraclestatuspagev2.web.dto.tag.TagFullDto;
+import com.example.oraclestatuspagev2.web.dto.tag.TagReducedDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class TagService implements CrudService<TagDto>{
+public class TagService implements CrudService<TagFullDto,TagReducedDto, TagCreateDto>{
+
     @Override
-    public List<TagDto> getAll() {
+    public List<TagReducedDto> getAll() {
         return null;
     }
 
     @Override
-    public TagDto get(Long id) {
+    public TagFullDto get(Long id) {
         return null;
     }
 
     @Override
-    public TagDto create(TagDto tagDto) {
+    public TagReducedDto create(TagCreateDto tagCreateDto) {
         return null;
     }
 
     @Override
-    public void update(Long id, TagDto tagDto) {
+    public void update(Long id, TagCreateDto tagCreateDto) {
 
     }
 

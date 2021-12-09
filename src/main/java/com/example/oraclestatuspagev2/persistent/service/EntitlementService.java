@@ -1,29 +1,32 @@
 package com.example.oraclestatuspagev2.persistent.service;
 
-import com.example.oraclestatuspagev2.web.dto.EntitlementDto;
+import com.example.oraclestatuspagev2.web.dto.entitlement.EntitlementCreateDto;
+import com.example.oraclestatuspagev2.web.dto.entitlement.EntitlementFullDto;
+import com.example.oraclestatuspagev2.web.dto.entitlement.EntitlementReducedDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class EntitlementService implements CrudService<EntitlementDto>{
+public class EntitlementService implements CrudService<EntitlementFullDto,EntitlementReducedDto, EntitlementCreateDto>{
+
     @Override
-    public List<EntitlementDto> getAll() {
+    public List<EntitlementReducedDto> getAll() {
         return null;
     }
 
     @Override
-    public EntitlementDto get(Long id) {
+    public EntitlementFullDto get(Long id) {
         return null;
     }
 
     @Override
-    public EntitlementDto create(EntitlementDto entitlementDto) {
+    public EntitlementReducedDto create(EntitlementCreateDto entitlementCreateDto) {
         return null;
     }
 
     @Override
-    public void update(Long id, EntitlementDto entitlementDto) {
+    public void update(Long id, EntitlementCreateDto entitlementCreateDto) {
 
     }
 

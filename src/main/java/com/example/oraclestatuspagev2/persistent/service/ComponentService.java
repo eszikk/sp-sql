@@ -1,28 +1,31 @@
 package com.example.oraclestatuspagev2.persistent.service;
 
-import com.example.oraclestatuspagev2.web.dto.ComponentDto;
+import com.example.oraclestatuspagev2.web.dto.component.ComponentCreateDto;
+import com.example.oraclestatuspagev2.web.dto.component.ComponentFullDto;
+import com.example.oraclestatuspagev2.web.dto.component.ComponentReducedDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 @Service
-public class ComponentService  implements CrudService<ComponentDto>{
+public class ComponentService  implements CrudService<ComponentFullDto,ComponentReducedDto, ComponentCreateDto>{
+
     @Override
-    public List<ComponentDto> getAll() {
+    public List<ComponentReducedDto> getAll() {
         return null;
     }
 
     @Override
-    public ComponentDto get(Long id) {
+    public ComponentFullDto get(Long id) {
         return null;
     }
 
     @Override
-    public ComponentDto create(ComponentDto componentDto) {
+    public ComponentReducedDto create(ComponentCreateDto componentCreateDto) {
         return null;
     }
 
     @Override
-    public void update(Long id, ComponentDto componentDto) {
+    public void update(Long id, ComponentCreateDto componentCreateDto) {
 
     }
 

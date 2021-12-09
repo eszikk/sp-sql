@@ -2,14 +2,14 @@ package com.example.oraclestatuspagev2.persistent.service;
 
 import java.util.List;
 
-public interface CrudService<DTO> {
-    List<DTO> getAll();
+public interface CrudService<FullResponseDto, ReducedResponseDto, CreateRequestDto> {
+    List<ReducedResponseDto> getAll();
 
-    DTO get(final Long id);
+    FullResponseDto get(final Long id);
 
-    DTO create(final DTO dto);
+    ReducedResponseDto create(final CreateRequestDto dto);
 
-    void update(final Long id, final DTO dto);
+    void update(final Long id, final CreateRequestDto dto);
 
     void delete(final Long id);
 }

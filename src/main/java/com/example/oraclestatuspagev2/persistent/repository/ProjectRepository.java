@@ -7,9 +7,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ProjectRepository extends JpaRepository<ProjectEntity, Long> {
+
     @EntityGraph(value = "project-entity-graph", type = EntityGraph.EntityGraphType.LOAD)
-    List<ProjectEntity> findAll();
+    Optional<ProjectEntity> findById(Long aLong);
+
 }

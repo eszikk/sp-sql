@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Objects;
 import java.util.Set;
 
 import static javax.persistence.CascadeType.ALL;
@@ -35,4 +36,8 @@ public class PageEntity extends BaseEntity {
     @JoinColumn(name = "page_id", nullable = false)
     private Set<ComponentEntity> components;
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
+    }
 }

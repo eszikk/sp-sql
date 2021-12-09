@@ -5,7 +5,8 @@ create sequence PROJECT_ID_SEQ
 create table PROJECT
 (
     ID          NUMBER(38)                                               not null primary key,
-    NAME        VARCHAR2(255)                                            not null,
+    NAME        VARCHAR2(255)                                            not null
+        constraint PROJECT_NAME_UK unique,
     DESCRIPTION VARCHAR2(255),
     CREATED_AT  TIMESTAMP(6) WITH TIME ZONE default CURRENT_TIMESTAMP(6) not null,
     UPDATED_AT  TIMESTAMP(6) WITH TIME ZONE,
@@ -39,7 +40,8 @@ create table PAGE
     CREATED_AT  TIMESTAMP(6) WITH TIME ZONE default CURRENT_TIMESTAMP(6) not null,
     UPDATED_AT  TIMESTAMP(6) WITH TIME ZONE,
     DELETED_AT  TIMESTAMP(6) WITH TIME ZONE,
-    PROJECT_ID  NUMBER(38)                                               not null references PROJECT
+    PROJECT_ID  NUMBER(38)                                               not null references PROJECT,
+    CONSTRAINT PAGE_NAME_PROJECT_ID_UK unique (NAME, PROJECT_ID)
 )
 /
 
@@ -61,7 +63,8 @@ create sequence COMPONENT_GROUP_ID_SEQ
 create table COMPONENT_GROUP
 (
     ID         NUMBER(38)             not null primary key,
-    NAME       VARCHAR2(255)          not null,
+    NAME       VARCHAR2(255)          not null
+        constraint COMPONENT_GROUP_NAME_UK unique,
     CREATED_AT TIMESTAMP(6),
     UPDATED_AT TIMESTAMP(6),
     DELETED_AT TIMESTAMP(6) WITH TIME ZONE,
@@ -96,7 +99,8 @@ create table COMPONENT
     UPDATED_AT  TIMESTAMP(6) WITH TIME ZONE,
     DELETED_AT  TIMESTAMP(6) WITH TIME ZONE,
     ENABLED     NUMBER(1)                   default 0                    not null CHECK (ENABLED in (1, 0)),
-    PAGE_ID     NUMBER(38)                                               not null references PAGE
+    PAGE_ID     NUMBER(38)                                               not null references PAGE,
+    CONSTRAINT COMPONENT_NAME_PAGE_ID_UK unique (NAME, PAGE_ID)
 )
 /
 
@@ -261,7 +265,7 @@ create table PAGE_TAG
 create table PROJECT_TAG
 (
     PROJECT_ID NUMBER(38) references PROJECT not null,
-    TAG_ID  NUMBER(38) references TAG  not null,
+    TAG_ID     NUMBER(38) references TAG     not null,
     CONSTRAINT PROJECT_TAG_UK unique (PROJECT_ID, TAG_ID)
 )
 /
@@ -273,7 +277,8 @@ create sequence SUBSCRIBER_ID_SEQ
 create table SUBSCRIBER
 (
     ID          NUMBER(38)                                               not null primary key,
-    EMAIL       VARCHAR2(255)                                            not null,
+    EMAIL       VARCHAR2(255)                                            not null
+        constraint SUBSCRIBER_EMAIL_UK unique,
     VERIFY_CODE VARCHAR2(255)                                            not null,
     CREATED_AT  TIMESTAMP(6) WITH TIME ZONE default CURRENT_TIMESTAMP(6) not null,
     UPDATED_AT  TIMESTAMP(6) WITH TIME ZONE,
@@ -373,8 +378,8 @@ create table EVENT_LOG
     ID         NUMBER(38)                                               not null primary key,
     OPERATION  VARCHAR2(10)                                             not null CHECK (OPERATION IN ('create', 'update', 'delete') ),
     TABLE_NAME VARCHAR2(15)                                             not null CHECK (TABLE_NAME IN ('app_user', 'subscriber', 'component_tag') ),
-    FROM_DATA  CLOB CHECK ( FROM_DATA IS JSON),
-    TO_DATA    CLOB CHECK ( TO_DATA IS JSON),
+    BEFORE     CLOB CHECK ( BEFORE IS JSON),
+    AFTER      CLOB CHECK ( AFTER IS JSON),
     USER_ID    NUMBER(38) references APP_USER                           not null,
     CREATED_AT TIMESTAMP(6) WITH TIME ZONE default CURRENT_TIMESTAMP(6) not null
 )

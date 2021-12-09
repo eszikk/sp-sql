@@ -19,8 +19,10 @@ import java.util.Set;
 public class ProjectEntity extends BaseEntity {
     @Column
     private String name;
+
     @Column
     private String description;
-    @OneToMany(mappedBy = "components")
+
+    @OneToMany(mappedBy = "project")
     private Set<PageEntity> pages;
 }

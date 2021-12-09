@@ -1,29 +1,33 @@
 package com.example.oraclestatuspagev2.persistent.service;
 
-import com.example.oraclestatuspagev2.web.dto.ScheduledMaintenanceDto;
+import com.example.oraclestatuspagev2.web.dto.scheduled_maintenance.ScheduledMaintenanceCreateDto;
+import com.example.oraclestatuspagev2.web.dto.scheduled_maintenance.ScheduledMaintenanceFullDto;
+import com.example.oraclestatuspagev2.web.dto.scheduled_maintenance.ScheduledMaintenanceReducedDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class ScheduledMaintenanceService implements CrudService<ScheduledMaintenanceDto>{
+public class ScheduledMaintenanceService implements
+        CrudService<ScheduledMaintenanceFullDto,ScheduledMaintenanceReducedDto, ScheduledMaintenanceCreateDto>{
+
     @Override
-    public List<ScheduledMaintenanceDto> getAll() {
+    public List<ScheduledMaintenanceReducedDto> getAll() {
         return null;
     }
 
     @Override
-    public ScheduledMaintenanceDto get(Long id) {
+    public ScheduledMaintenanceFullDto get(Long id) {
         return null;
     }
 
     @Override
-    public ScheduledMaintenanceDto create(ScheduledMaintenanceDto scheduledMaintenanceDto) {
+    public ScheduledMaintenanceReducedDto create(ScheduledMaintenanceCreateDto scheduledMaintenanceCreateDto) {
         return null;
     }
 
     @Override
-    public void update(Long id, ScheduledMaintenanceDto scheduledMaintenanceDto) {
+    public void update(Long id, ScheduledMaintenanceCreateDto scheduledMaintenanceCreateDto) {
 
     }
 

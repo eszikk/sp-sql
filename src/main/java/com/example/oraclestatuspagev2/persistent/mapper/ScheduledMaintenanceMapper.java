@@ -1,12 +1,10 @@
 package com.example.oraclestatuspagev2.persistent.mapper;
 
 import com.example.oraclestatuspagev2.persistent.entity.ScheduledMaintenanceEntity;
-import com.example.oraclestatuspagev2.web.dto.ScheduledMaintenanceDto;
+import com.example.oraclestatuspagev2.web.dto.scheduled_maintenance.ScheduledMaintenanceReducedDto;
+import com.example.oraclestatuspagev2.web.dto.scheduled_maintenance.ScheduledMaintenanceFullDto;
 import org.mapstruct.Mapper;
 
 @Mapper
-public interface ScheduledMaintenanceMapper {
-    ScheduledMaintenanceDto toDto(ScheduledMaintenanceEntity entity);
-
-    ScheduledMaintenanceEntity toEntity(ScheduledMaintenanceDto dto);
+public interface ScheduledMaintenanceMapper extends MapperBase<ScheduledMaintenanceReducedDto, ScheduledMaintenanceFullDto, ScheduledMaintenanceEntity> {
 }

@@ -1,12 +1,11 @@
 package com.example.oraclestatuspagev2.persistent.mapper;
 
 import com.example.oraclestatuspagev2.persistent.entity.SubscriberEntity;
-import com.example.oraclestatuspagev2.web.dto.SubscriberDto;
+import com.example.oraclestatuspagev2.web.dto.subscriber.SubscriberReducedDto;
+import com.example.oraclestatuspagev2.web.dto.subscriber.SubscriberFullDto;
 import org.mapstruct.Mapper;
 
 @Mapper
-public interface SubscriberMapper {
-    SubscriberDto toDto(SubscriberEntity entity);
+public interface SubscriberMapper extends MapperBase<SubscriberReducedDto, SubscriberFullDto, SubscriberEntity> {
 
-    SubscriberEntity toEntity(SubscriberDto dto);
 }
