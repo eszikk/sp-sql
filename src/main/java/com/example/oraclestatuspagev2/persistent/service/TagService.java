@@ -1,17 +1,18 @@
 package com.example.oraclestatuspagev2.persistent.service;
 
+import com.example.oraclestatuspagev2.web.dto.page_reposne.PageResponseDto;
 import com.example.oraclestatuspagev2.web.dto.tag.TagCreateDto;
 import com.example.oraclestatuspagev2.web.dto.tag.TagFullDto;
 import com.example.oraclestatuspagev2.web.dto.tag.TagReducedDto;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class TagService implements CrudService<TagFullDto,TagReducedDto, TagCreateDto>{
 
+
     @Override
-    public List<TagReducedDto> getAll() {
+    public PageResponseDto<TagReducedDto> getAll(Pageable pageable) {
         return null;
     }
 

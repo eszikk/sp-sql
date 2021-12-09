@@ -1,18 +1,19 @@
 package com.example.oraclestatuspagev2.persistent.service;
 
+import com.example.oraclestatuspagev2.web.dto.page_reposne.PageResponseDto;
 import com.example.oraclestatuspagev2.web.dto.scheduled_maintenance.ScheduledMaintenanceCreateDto;
 import com.example.oraclestatuspagev2.web.dto.scheduled_maintenance.ScheduledMaintenanceFullDto;
 import com.example.oraclestatuspagev2.web.dto.scheduled_maintenance.ScheduledMaintenanceReducedDto;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class ScheduledMaintenanceService implements
         CrudService<ScheduledMaintenanceFullDto,ScheduledMaintenanceReducedDto, ScheduledMaintenanceCreateDto>{
 
+
     @Override
-    public List<ScheduledMaintenanceReducedDto> getAll() {
+    public PageResponseDto<ScheduledMaintenanceReducedDto> getAll(Pageable pageable) {
         return null;
     }
 

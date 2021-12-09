@@ -13,7 +13,7 @@ import java.util.Set;
 @NamedEntityGraph(
         name = "project-entity-graph",
         attributeNodes = {
-                @NamedAttributeNode("pages")
+                @NamedAttributeNode("statusPages")
         }
 )
 public class ProjectEntity extends BaseEntity {
@@ -24,5 +24,5 @@ public class ProjectEntity extends BaseEntity {
     private String description;
 
     @OneToMany(mappedBy = "project")
-    private Set<PageEntity> pages;
+    private Set<PageEntity> statusPages;
 }

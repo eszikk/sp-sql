@@ -1,17 +1,16 @@
 package com.example.oraclestatuspagev2.persistent.service;
 
+import com.example.oraclestatuspagev2.web.dto.page_reposne.PageResponseDto;
 import com.example.oraclestatuspagev2.web.dto.subscriber.SubscriberCreateDto;
 import com.example.oraclestatuspagev2.web.dto.subscriber.SubscriberFullDto;
 import com.example.oraclestatuspagev2.web.dto.subscriber.SubscriberReducedDto;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class SubscriberService implements CrudService<SubscriberFullDto, SubscriberReducedDto, SubscriberCreateDto>{
-
     @Override
-    public List<SubscriberReducedDto> getAll() {
+    public PageResponseDto<SubscriberReducedDto> getAll(Pageable pageable) {
         return null;
     }
 

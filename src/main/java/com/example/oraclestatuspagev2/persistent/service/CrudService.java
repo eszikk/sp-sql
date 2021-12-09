@@ -1,9 +1,10 @@
 package com.example.oraclestatuspagev2.persistent.service;
 
-import java.util.List;
+import com.example.oraclestatuspagev2.web.dto.page_reposne.PageResponseDto;
+import org.springframework.data.domain.Pageable;
 
 public interface CrudService<FullResponseDto, ReducedResponseDto, CreateRequestDto> {
-    List<ReducedResponseDto> getAll();
+    PageResponseDto<ReducedResponseDto> getAll(Pageable pageable);
 
     FullResponseDto get(final Long id);
 

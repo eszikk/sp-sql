@@ -15,7 +15,4 @@ public class ComponentReducedDto {
      int status;
      Integer order;
      boolean enabled;
-//    private Set<ScheduledMaintenanceDto> scheduledMaintenances;
-//    private Set<IncidentDto> incidents;
-//    private Set<SubscriberDto> subscribers;
 }

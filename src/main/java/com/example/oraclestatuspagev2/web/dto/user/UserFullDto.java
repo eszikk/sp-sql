@@ -12,6 +12,6 @@ import java.util.Set;
 @Value
 @SuperBuilder
 public class UserFullDto extends UserReducedDto {
-    private Set<EntitlementReducedDto> entitlements;
-    private Set<PageReducedDto> pages;
+    Set<EntitlementReducedDto> entitlements;
+    Set<PageReducedDto> pages;
 }

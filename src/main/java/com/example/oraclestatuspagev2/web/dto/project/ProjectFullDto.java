@@ -11,5 +11,5 @@ import java.util.Set;
 @SuperBuilder
 @Value
 public class ProjectFullDto extends ProjectReducedDto {
-     Set<PageReducedDto> pages;
+     Set<PageReducedDto> statusPages;
 }
