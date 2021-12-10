@@ -2,6 +2,7 @@ package com.example.oraclestatuspagev2.web;
 
 import com.example.oraclestatuspagev2.web.dto.ErrorDto;
 import com.example.oraclestatuspagev2.web.exception.NotFoundException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -42,6 +43,18 @@ public class ErrorHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorDto handleValidationExceptions(HttpServletRequest request, MethodArgumentNotValidException ex) {
+        return ErrorDto.builder()
+                .status(HttpStatus.BAD_REQUEST.value())
+                .error(ex.getMessage())
+                .timestamp(OffsetDateTime.now().toString())
+                .path(request.getRequestURI())
+                .method(request.getMethod())
+                .build();
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorDto handleOracleDatabaseException(HttpServletRequest request, DataIntegrityViolationException ex) {
         return ErrorDto.builder()
                 .status(HttpStatus.BAD_REQUEST.value())
                 .error(ex.getMessage())

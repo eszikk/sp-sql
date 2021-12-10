@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
 
@@ -38,12 +39,12 @@ public class ProjectController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(value = "/projects", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ProjectReducedDto create(@RequestBody ProjectCreateDto projectCreateDto) {
+    public ProjectReducedDto create(@Valid @RequestBody ProjectCreateDto projectCreateDto) {
         return projectService.create(projectCreateDto);
     }
 
     @DeleteMapping(value = "/projects/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public void delete(@PathVariable @NotBlank Long id) {
-         projectService.delete(id);
+        projectService.delete(id);
     }
 }

@@ -10,7 +10,8 @@ create table PROJECT
     DESCRIPTION VARCHAR2(255),
     CREATED_AT  TIMESTAMP(6) WITH TIME ZONE default CURRENT_TIMESTAMP(6) not null,
     UPDATED_AT  TIMESTAMP(6) WITH TIME ZONE,
-    DELETED_AT  TIMESTAMP(6) WITH TIME ZONE
+    DELETED_AT  TIMESTAMP(6) WITH TIME ZONE,
+    VERSION     NUMBER(38)                  default 0                    not null
 )
 /
 
@@ -41,6 +42,7 @@ create table PAGE
     UPDATED_AT  TIMESTAMP(6) WITH TIME ZONE,
     DELETED_AT  TIMESTAMP(6) WITH TIME ZONE,
     PROJECT_ID  NUMBER(38)                                               not null references PROJECT,
+    VERSION     NUMBER(38)                  default 0                    not null,
     CONSTRAINT PAGE_NAME_PROJECT_ID_UK unique (NAME, PROJECT_ID)
 )
 /
@@ -69,7 +71,8 @@ create table COMPONENT_GROUP
     UPDATED_AT TIMESTAMP(6),
     DELETED_AT TIMESTAMP(6) WITH TIME ZONE,
     "order"    NUMBER(10) default '0' not null,
-    COLLAPSED  NUMBER(1)  default 1   not null CHECK (COLLAPSED in (1, 0))
+    COLLAPSED  NUMBER(1)  default 1   not null CHECK (COLLAPSED in (1, 0)),
+    VERSION    NUMBER(38) default 0   not null
 )
 /
 
@@ -100,6 +103,7 @@ create table COMPONENT
     DELETED_AT  TIMESTAMP(6) WITH TIME ZONE,
     ENABLED     NUMBER(1)                   default 0                    not null CHECK (ENABLED in (1, 0)),
     PAGE_ID     NUMBER(38)                                               not null references PAGE,
+    VERSION     NUMBER(38)                  default 0                    not null,
     CONSTRAINT COMPONENT_NAME_PAGE_ID_UK unique (NAME, PAGE_ID)
 )
 /
@@ -137,7 +141,8 @@ create table INCIDENT
     CREATED_AT TIMESTAMP(6) WITH TIME ZONE default CURRENT_TIMESTAMP(6) not null,
     UPDATED_AT TIMESTAMP(6) WITH TIME ZONE,
     DELETED_AT TIMESTAMP(6) WITH TIME ZONE,
-    VISIBLE    NUMBER(1)                   default 0                    not null CHECK (VISIBLE in (1, 0))
+    VISIBLE    NUMBER(1)                   default 0                    not null CHECK (VISIBLE in (1, 0)),
+    VERSION    NUMBER(38)                  default 0                    not null
 )
 /
 
@@ -166,7 +171,8 @@ create table SCHEDULED_MAINTENANCE
     UPDATED_AT   TIMESTAMP(6) WITH TIME ZONE,
     DELETED_AT   TIMESTAMP(6) WITH TIME ZONE,
     SCHEDULED_AT TIMESTAMP(6) WITH TIME ZONE default CURRENT_TIMESTAMP(6) not null,
-    VISIBLE      NUMBER(1)                   default 0                    not null CHECK (VISIBLE in (1, 0))
+    VISIBLE      NUMBER(1)                   default 0                    not null CHECK (VISIBLE in (1, 0)),
+    VERSION      NUMBER(38)                  default 0                    not null
 )
 /
 
@@ -207,10 +213,10 @@ create table TAG
 (
     ID         NUMBER(38)                                               not null primary key,
     NAME       VARCHAR2(255)                                            not null,
-    SLUG       VARCHAR2(255)                                            not null,
     CREATED_AT TIMESTAMP(6) WITH TIME ZONE default CURRENT_TIMESTAMP(6) not null,
     UPDATED_AT TIMESTAMP(6) WITH TIME ZONE,
-    DELETED_AT TIMESTAMP(6) WITH TIME ZONE
+    DELETED_AT TIMESTAMP(6) WITH TIME ZONE,
+    VERSION    NUMBER(38)                  default 0                    not null
 )
 /
 
@@ -282,7 +288,8 @@ create table SUBSCRIBER
     VERIFY_CODE VARCHAR2(255)                                            not null,
     CREATED_AT  TIMESTAMP(6) WITH TIME ZONE default CURRENT_TIMESTAMP(6) not null,
     UPDATED_AT  TIMESTAMP(6) WITH TIME ZONE,
-    DELETED_AT  TIMESTAMP(6) WITH TIME ZONE
+    DELETED_AT  TIMESTAMP(6) WITH TIME ZONE,
+    VERSION     NUMBER(38)                  default 0                    not null
 )
 /
 
@@ -324,7 +331,8 @@ create table APP_USER
     ACTIVE         NUMBER(1)                   default 0                    not null CHECK (ACTIVE in (1, 0)),
     CREATED_AT     TIMESTAMP(6) WITH TIME ZONE default CURRENT_TIMESTAMP(6) not null,
     UPDATED_AT     TIMESTAMP(6) WITH TIME ZONE,
-    DELETED_AT     TIMESTAMP(6) WITH TIME ZONE
+    DELETED_AT     TIMESTAMP(6) WITH TIME ZONE,
+    VERSION        NUMBER(38)                  default 0                    not null
 )
 /
 
@@ -347,7 +355,8 @@ create table ENTITLEMENT
         constraint ENTITLEMENT_NAME_UK unique,
     CREATED_AT TIMESTAMP(6) WITH TIME ZONE default CURRENT_TIMESTAMP(6) not null,
     UPDATED_AT TIMESTAMP(6) WITH TIME ZONE,
-    DELETED_AT TIMESTAMP(6) WITH TIME ZONE
+    DELETED_AT TIMESTAMP(6) WITH TIME ZONE,
+    VERSION    NUMBER(38)                  default 0                    not null
 )
 /
 

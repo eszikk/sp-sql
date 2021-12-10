@@ -1,11 +1,9 @@
 package com.example.oraclestatuspagev2.persistent.mapper;
 
-public interface MapperBase<ReducedDto, FullDto, Entity> {
+public interface MapperBase<ReducedDto, FullDto, CreateDto, Entity> {
     ReducedDto toReducedDto(Entity entity);
 
     FullDto toFullDto(Entity entity);
 
-//    Entity reducedToEntity(ReducedDto dto);
-//
-//    Entity fullToEntity(FullDto dto);
+    Entity ToEntity(CreateDto dto);
 }

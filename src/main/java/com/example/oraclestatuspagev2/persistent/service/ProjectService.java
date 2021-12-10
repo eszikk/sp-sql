@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+
 @Service
 public class ProjectService implements CrudService<ProjectFullDto, ProjectReducedDto, ProjectCreateDto> {
 
@@ -42,9 +43,10 @@ public class ProjectService implements CrudService<ProjectFullDto, ProjectReduce
         return projectMapper.toFullDto(projectEntity);
     }
 
+    @LogExecutionTime
     @Override
     public ProjectReducedDto create(ProjectCreateDto projectCreateDto) {
-        return null;
+        return projectMapper.toReducedDto(projectRepository.save(projectMapper.ToEntity(projectCreateDto)));
     }
 
     @Override
