@@ -127,6 +127,29 @@ create table COMPONENT_COMPONENT_GROUP
     CONSTRAINT COMPONENT_COMPONENT_GROUP_UK unique (COMPONENT_ID, COMPONENT_GROUP_ID)
 )
 /
+--INCIDENT_STATUS
+create sequence INCIDENT_STATUS_SEQ
+/
+
+create table INCIDENT_STATUS
+(
+    ID   NUMBER(38)    not null primary key,
+    NAME VARCHAR2(255) not null
+        constraint INCIDENT_STATUS_NAME_UK unique
+)
+/
+
+create or replace trigger INCIDENT_STATUS_ID_TRG
+    before insert
+    on INCIDENT_STATUS
+    for each row
+begin
+    if :new.id is null then
+        select INCIDENT_STATUS_SEQ.nextval into :new.id from dual;
+    end if;
+end;
+/
+
 
 --INCIDENT
 create sequence INCIDENT_ID_SEQ
@@ -134,15 +157,18 @@ create sequence INCIDENT_ID_SEQ
 
 create table INCIDENT
 (
-    ID         NUMBER(38)                                               not null primary key,
-    NAME       VARCHAR2(255)                                            not null,
-    STATUS     NUMBER(10)                                               not null,
-    MESSAGE    CLOB                                                     not null,
-    CREATED_AT TIMESTAMP(6) WITH TIME ZONE default CURRENT_TIMESTAMP(6) not null,
-    UPDATED_AT TIMESTAMP(6) WITH TIME ZONE,
-    DELETED_AT TIMESTAMP(6) WITH TIME ZONE,
-    VISIBLE    NUMBER(1)                   default 0                    not null CHECK (VISIBLE in (1, 0)),
-    VERSION    NUMBER(38)                  default 0                    not null
+    ID                 NUMBER(38)                                               not null primary key,
+    NAME               VARCHAR2(255)                                            not null,
+    MESSAGE            CLOB                                                     not null,
+    OCCURRED_AT        TIMESTAMP(6) WITH TIME ZONE default CURRENT_TIMESTAMP(6) not null,
+    RESOLVED_AT        TIMESTAMP(6) WITH TIME ZONE,
+    CREATED_AT         TIMESTAMP(6) WITH TIME ZONE default CURRENT_TIMESTAMP(6) not null,
+    UPDATED_AT         TIMESTAMP(6) WITH TIME ZONE,
+    DELETED_AT         TIMESTAMP(6) WITH TIME ZONE,
+    VISIBLE_AT         TIMESTAMP(6) WITH TIME ZONE default CURRENT_TIMESTAMP(6),
+    VISIBLE            NUMBER(1)                   default 0                    not null CHECK (VISIBLE in (1, 0)),
+    VERSION            NUMBER(38)                  default 0                    not null,
+    INCIDENT_STATUS_ID NUMBER(38) references INCIDENT_STATUS                    not null
 )
 /
 
@@ -157,22 +183,58 @@ begin
 end;
 /
 
+CREATE OR REPLACE TRIGGER INCIDENT_OCCURRED_AT_TRG
+    BEFORE INSERT OR UPDATE
+    ON INCIDENT
+    FOR EACH ROW
+BEGIN
+    IF (:new.OCCURRED_AT > sysdate)
+    THEN
+        RAISE_APPLICATION_ERROR(-20001, 'OCCURRED_AT date must be in the past');
+    END IF;
+END;
+/
+
+--SCHEDULED_MAINTENANCE_STATUS
+create sequence SCHEDULED_MAINTENANCE_STATUS_SEQ
+/
+
+create table SCHEDULED_MAINTENANCE_STATUS
+(
+    ID   NUMBER(38)    not null primary key,
+    NAME VARCHAR2(255) not null
+        constraint SCHEDULED_MAINTENANCE_STATUS_NAME_UK unique
+)
+/
+
+create or replace trigger SCHEDULED_MAINTENANCE_STATUS_ID_TRG
+    before insert
+    on SCHEDULED_MAINTENANCE_STATUS
+    for each row
+begin
+    if :new.id is null then
+        select SCHEDULED_MAINTENANCE_STATUS_SEQ.nextval into :new.id from dual;
+    end if;
+end;
+/
+
 --SCHEDULED_MAINTENANCE
 create sequence SCHEDULED_MAINTENANCE_ID_SEQ
 /
 
 create table SCHEDULED_MAINTENANCE
 (
-    ID           NUMBER(38)                                               not null primary key,
-    NAME         VARCHAR2(255)                                            not null,
-    STATUS       NUMBER(10)                                               not null,
-    MESSAGE      CLOB                                                     not null,
-    CREATED_AT   TIMESTAMP(6) WITH TIME ZONE default CURRENT_TIMESTAMP(6) not null,
-    UPDATED_AT   TIMESTAMP(6) WITH TIME ZONE,
-    DELETED_AT   TIMESTAMP(6) WITH TIME ZONE,
-    SCHEDULED_AT TIMESTAMP(6) WITH TIME ZONE default CURRENT_TIMESTAMP(6) not null,
-    VISIBLE      NUMBER(1)                   default 0                    not null CHECK (VISIBLE in (1, 0)),
-    VERSION      NUMBER(38)                  default 0                    not null
+    ID                              NUMBER(38)                                               not null primary key,
+    NAME                            VARCHAR2(255)                                            not null,
+    MESSAGE                         CLOB                                                     not null,
+    CREATED_AT                      TIMESTAMP(6) WITH TIME ZONE default CURRENT_TIMESTAMP(6) not null,
+    UPDATED_AT                      TIMESTAMP(6) WITH TIME ZONE,
+    DELETED_AT                      TIMESTAMP(6) WITH TIME ZONE,
+    SCHEDULED_AT                    TIMESTAMP(6) WITH TIME ZONE default CURRENT_TIMESTAMP(6) not null,
+    VISIBLE_AT                      TIMESTAMP(6) WITH TIME ZONE default CURRENT_TIMESTAMP(6),
+    VISIBLE                         NUMBER(1)                   default 0                    not null CHECK (VISIBLE in (1, 0)),
+    VERSION                         NUMBER(38)                  default 0                    not null,
+    SCHEDULED_MAINTENANCE_STATUS_ID NUMBER(38) references SCHEDULED_MAINTENANCE_STATUS       not null
 )
 /
 
@@ -286,6 +348,7 @@ create table SUBSCRIBER
     EMAIL       VARCHAR2(255)                                            not null
         constraint SUBSCRIBER_EMAIL_UK unique,
     VERIFY_CODE VARCHAR2(255)                                            not null,
+    VERIFIED_AT TIMESTAMP(6) WITH TIME ZONE,
     CREATED_AT  TIMESTAMP(6) WITH TIME ZONE default CURRENT_TIMESTAMP(6) not null,
     UPDATED_AT  TIMESTAMP(6) WITH TIME ZONE,
     DELETED_AT  TIMESTAMP(6) WITH TIME ZONE,
@@ -307,8 +370,9 @@ end;
 -- COMPONENT_SUBSCRIBER
 create table COMPONENT_SUBSCRIBER
 (
-    COMPONENT_ID  NUMBER(38) references COMPONENT  not null,
-    SUBSCRIBER_ID NUMBER(38) references SUBSCRIBER not null,
+    COMPONENT_ID  NUMBER(38) references COMPONENT                          not null,
+    SUBSCRIBER_ID NUMBER(38) references SUBSCRIBER                         not null,
+    SUBSCRIBED_AT TIMESTAMP(6) WITH TIME ZONE default CURRENT_TIMESTAMP(6) not null,
     CONSTRAINT COMPONENT_SUBSCRIBER_UK unique (COMPONENT_ID, SUBSCRIBER_ID)
 )
 /
@@ -386,11 +450,11 @@ create table EVENT_LOG
 (
     ID         NUMBER(38)                                               not null primary key,
     OPERATION  VARCHAR2(10)                                             not null CHECK (OPERATION IN ('create', 'update', 'delete') ),
-    TABLE_NAME VARCHAR2(15)                                             not null CHECK (TABLE_NAME IN ('app_user', 'subscriber', 'component_tag') ),
+    TABLE_NAME VARCHAR2(15)                                             not null CHECK (TABLE_NAME IN ('app_user', 'project', 'subscriber', 'component_tag') ),
     BEFORE     CLOB CHECK ( BEFORE IS JSON),
     AFTER      CLOB CHECK ( AFTER IS JSON),
-    USER_ID    NUMBER(38) references APP_USER                           not null,
-    CREATED_AT TIMESTAMP(6) WITH TIME ZONE default CURRENT_TIMESTAMP(6) not null
+    CREATED_AT TIMESTAMP(6) WITH TIME ZONE default CURRENT_TIMESTAMP(6) not null,
+    USER_ID    NUMBER(38) references APP_USER                           not null
 )
 /
 
@@ -404,6 +468,62 @@ begin
     end if;
 end;
 /
+
+-- TEMPLATE_TYPE
+create sequence TEMPLATE_TYPE_ID_SEQ
+/
+
+create table TEMPLATE_TYPE
+(
+    ID   NUMBER(38)    not null primary key,
+    NAME VARCHAR2(255) not null
+        constraint TEMPLATE_TYPE_NAME_UK unique
+)
+/
+
+create or replace trigger TEMPLATE_TYPE_ID_TRG
+    before insert
+    on TEMPLATE_TYPE
+    for each row
+begin
+    if :new.id is null then
+        select TEMPLATE_TYPE_ID_SEQ.nextval into :new.id from dual;
+    end if;
+end;
+/
+
+-- TEMPLATE
+create sequence TEMPLATE_ID_SEQ
+/
+
+create table TEMPLATE
+(
+    ID               NUMBER(38)                                               not null primary key,
+    NAME             VARCHAR2(255)                                            not null,
+    TEMPLATE         CLOB                                                     not null,
+    CREATED_AT       TIMESTAMP(6) WITH TIME ZONE default CURRENT_TIMESTAMP(6) not null,
+    UPDATED_AT       TIMESTAMP(6) WITH TIME ZONE,
+    DELETED_AT       TIMESTAMP(6) WITH TIME ZONE,
+    VERSION          NUMBER(38)                  default 0                    not null,
+    PAGE_ID          NUMBER(38) references PAGE                               not null,
+    TEMPLATE_TYPE_ID NUMBER(38) references TEMPLATE_TYPE                      not null,
+    CONSTRAINT TEMPLATE_NAME_PAGE_UK unique (NAME, PAGE_ID)
+)
+/
+
+create or replace trigger TEMPLATE_ID_TRG
+    before insert
+    on TEMPLATE
+    for each row
+begin
+    if :new.id is null then
+        select TEMPLATE_ID_SEQ.nextval into :new.id from dual;
+    end if;
+end;
+/
+
+
+
 
 
 
